@@ -1,0 +1,86 @@
+Грамматика
+
+    0 $accept: program $end
+
+    1 program: expr
+
+    2 expr: NUMBER
+    3     | expr PLUS expr
+
+
+Терминальные символы с правилами, в которых они появляются
+
+    $end (0) 0
+    error (256)
+    NUMBER <number> (258) 2
+    PLUS (259) 3
+
+
+Нетерминальные символы с правилами, в которых они появляются
+
+    $accept (5)
+        on left: 0
+    program <number> (6)
+        on left: 1
+        on right: 0
+    expr <number> (7)
+        on left: 2 3
+        on right: 1 3
+
+
+Состояние 0
+
+    0 $accept: • program $end
+
+    NUMBER  сдвиг, и переход в состояние 1
+
+    program  переход в состояние 2
+    expr     переход в состояние 3
+
+
+Состояние 1
+
+    2 expr: NUMBER •
+
+    $default  вывод с использованием правила 2 (expr)
+
+
+Состояние 2
+
+    0 $accept: program • $end
+
+    $end  сдвиг, и переход в состояние 4
+
+
+Состояние 3
+
+    1 program: expr •
+    3 expr: expr • PLUS expr
+
+    PLUS  сдвиг, и переход в состояние 5
+
+    $default  вывод с использованием правила 1 (program)
+
+
+Состояние 4
+
+    0 $accept: program $end •
+
+    $default  принять
+
+
+Состояние 5
+
+    3 expr: expr PLUS • expr
+
+    NUMBER  сдвиг, и переход в состояние 1
+
+    expr  переход в состояние 6
+
+
+Состояние 6
+
+    3 expr: expr • PLUS expr
+    3     | expr PLUS expr •
+
+    $default  вывод с использованием правила 3 (expr)
